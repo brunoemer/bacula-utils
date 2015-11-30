@@ -27,7 +27,8 @@ my $DBPORT = $ENV{DBPORT} || $cfg{'db_port'} || '3306';
 my $DBHOST = $ENV{DBHOST} || $cfg{'db_address'} || 'localhost';
 my $DBNAME = $ENV{DBNAME} || $cfg{'db_name'} || 'bacula';
 my $DBPASS = $ENV{DBPASS} || $cfg{'db_password'};
-
+my $pwarning = $ENV{'warning'} || 80;
+my $pcritical = $ENV{'critical'} || 90;
 
 my $POOLNAME = File::Basename::basename($0);
 $POOLNAME =~ s/^bacula_pool_volumes_//;
@@ -65,11 +66,13 @@ if (defined($ARGV[0]) and ($ARGV[0] eq 'config'))
 	print "graph_category bacula\n";
 	print "graph_info Bacula Volume states for POOL $POOLNAME\n";
 	print "graph_scale no\n";
-    print "graph_order full append used error recycle other unused\n";
+	print "graph_order full append used error recycle other unused\n";
 
 	print "full.label Full\n";
 	print "full.draw AREA\n";
 	print "full.info Full and retention time not reached\n";
+	print "full.critical ".($GRAPHLIMIT*($pcritical/100))."\n";
+	print "full.warning ".($GRAPHLIMIT*($pwarning/100))."\n";
 
 	print "append.label Appendable\n";
 	print "append.draw STACK\n";
